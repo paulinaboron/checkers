@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkers</title>
+    <script type="module" src="./Main.js"></script>
+    <script type="module" src="./Game.js"></script>
+    <script type="module" src="./Net.js"></script>
+    <script type="module" src="./Ui.js"></script>
+    <script src="./three.js"></script>
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+
+    <div id="status">Status</div>
+    <div id="menu">
+        <input type="text" id="username">
+        <button id="login">Login</button>
+        <button id="reset">Reset</button>
+    </div>
+
+    <div id="wait" class="hidden">
+        <h2>Czekaj na drugiego gracza</h2>
+    </div>
+
+    <div id="root"></div>
+</body>
+
+</html>
