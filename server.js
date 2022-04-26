@@ -43,21 +43,33 @@ app.post("/ADD_USER", (req, res) => {
                 });
             });
         } else if (playersCount == 1) {
-            players.find({ username: req.body.username }, function (err, docs) {
-                if (docs == []) {
-                    let doc = {
-                        username: req.body.username,
-                        color: "black"
-                    }
-                    players.insert(doc, function (err, newDoc) {
-                        console.log("dodano dokument (obiekt): ", newDoc)
+            // players.find({ username: req.body.username }, function (err, docs) {
+            //     if (docs == []) {
+            //         let doc = {
+            //             username: req.body.username,
+            //             color: "black"
+            //         }
+            //         players.insert(doc, function (err, newDoc) {
+            //             console.log("dodano dokument (obiekt): ", newDoc)
 
-                        players.count({}, function (err, count) {
-                            console.log("dokumentów jest: ", count)
-                            res.send({ nrOfPlayers: count, username: req.body.username })
-                        });
-                    });
-                }
+            //             players.count({}, function (err, count) {
+            //                 console.log("dokumentów jest: ", count)
+            //                 res.send({ nrOfPlayers: count, username: req.body.username })
+            //             });
+            //         });
+            //     }
+            // });
+            let doc = {
+                username: req.body.username,
+                color: "black"
+            }
+            players.insert(doc, function (err, newDoc) {
+                console.log("dodano dokument (obiekt): ", newDoc)
+
+                players.count({}, function (err, count) {
+                    console.log("dokumentów jest: ", count)
+                    res.send({ nrOfPlayers: count, username: req.body.username })
+                });
             });
         }
     });
@@ -69,6 +81,12 @@ app.post("/REMOVE_ALL", (req, res) => {
     });
 
     res.send("usunięto wszystko")
+})
+
+app.post("/WAITING", (req, res) => {
+    players.count({}, function (err, count) {
+        res.send({ nrOfPlayers: count })
+    });
 })
 
 

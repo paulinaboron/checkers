@@ -1,6 +1,6 @@
-import {net, game} from "./Main.js"
+import { net, game } from "./Main.js"
 
-class Ui{
+class Ui {
 
     constructor() {
 
@@ -16,11 +16,11 @@ class Ui{
         net.addPlayer(username)
     }
 
-    resetClick(){
+    resetClick() {
         net.removeAllPlayers()
     }
 
-    onePlayer(){
+    onePlayer() {
         console.log("1 player");
         game.setPawns()
         document.getElementById("menu").classList.add("hidden")
@@ -29,21 +29,22 @@ class Ui{
         game.setCamera1()
     }
 
-    twoPlayers(){
+    twoPlayers() {
         console.log("2 players");
         game.setPawns()
         document.getElementById("menu").classList.add("hidden")
 
         game.setCamera2()
+        game.enableSceneClick()
     }
 
-    moreThanTwoPlayers(){
+    moreThanTwoPlayers() {
         console.log("3 & more");
     }
 
-    setStatus(info){
+    setStatus(info) {
         document.getElementById("status").innerText = info
     }
 }
 
-export {Ui}
+export { Ui }

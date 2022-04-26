@@ -1,3 +1,6 @@
+import { Pionek } from "./Pionek.js"
+import { Field } from "./Field.js"
+
 class Game {
 
     constructor() {
@@ -28,35 +31,17 @@ class Game {
         ];
 
         let i = -70
-        const geometryBox = new THREE.BoxGeometry(20, 5, 20);
-        const material1 = new THREE.MeshPhongMaterial({
-            color: 0xffffff,
-            specular: 0x222222,
-            shininess: 10,
-            side: THREE.DoubleSide,
-            map: new THREE.TextureLoader().load("imgs/white.jpg"),
-        })
-
-        const material2 = new THREE.MeshPhongMaterial({
-            color: 0xffffff,
-            specular: 0xffffff,
-            shininess: 50,
-            side: THREE.DoubleSide,
-            map: new THREE.TextureLoader().load("imgs/gray.jpg"),
-        })
-
         this.szachownica.forEach(row => {
             let j = -70
             row.forEach(field => {
                 let material
                 if (field == 1) {
-                    material = material1
+                    const field = new Field("imgs/white.jpg", j, -5, i)
+                    this.scene.add(field)
                 } else {
-                    material = material2
+                    const field = new Field("imgs/gray.jpg", j, -5, i)
+                    this.scene.add(field)
                 }
-                const cube = new THREE.Mesh(geometryBox, material);
-                cube.position.set(j, -5, i)
-                this.scene.add(cube);
                 j += 20
             });
             i += 20
@@ -67,9 +52,15 @@ class Game {
         this.scene.add(axes)
 
         this.render() // wywołanie metody render
+
+
+        // window.addEventListener("mousedown", (e) => {
+        //     this.sceneClick(e)
+        // });
+
     }
 
-    setPawns(){
+    setPawns() {
         let pawns = [
             [0, 2, 0, 2, 0, 2, 0, 2],
             [2, 0, 2, 0, 2, 0, 2, 0],
@@ -82,35 +73,18 @@ class Game {
         ];
 
         let i = -70
-        const geometryCylinder = new THREE.CylinderGeometry(7, 7, 7, 32);
-        const material3 = new THREE.MeshPhongMaterial({
-            color: 0xffffff,
-            specular: 0x222222,
-            shininess: 50,
-            side: THREE.DoubleSide,
-            map: new THREE.TextureLoader().load("imgs/pink.jpg"),
-        })
-        const material4 = new THREE.MeshPhongMaterial({
-            color: 0xffffff,
-            specular: 0x222222,
-            shininess: 50,
-            side: THREE.DoubleSide,
-            map: new THREE.TextureLoader().load("imgs/blue.jpg"),
-        })
-
         pawns.forEach(row => {
             let j = -70
             row.forEach(pawn => {
                 if (pawn != 0) {
-                    let material
                     if (pawn == 1) {
-                        material = material3
+                        const pio = new Pionek("imgs/pink.jpg", j, 0, i)
+                        this.scene.add(pio)
+
                     } else {
-                        material = material4
+                        const pio = new Pionek("imgs/blue.jpg", j, 0, i)
+                        this.scene.add(pio)
                     }
-                    const cylinder = new THREE.Mesh(geometryCylinder, material);
-                    cylinder.position.set(j, 0, i)
-                    this.scene.add(cylinder);
                 }
                 j += 20
             });
@@ -118,17 +92,45 @@ class Game {
         });
     }
 
-    setCamera1(){
+    setCamera1() {
         this.camera.position.set(0, 100, 180)
         this.camera.lookAt(this.scene.position)
     }
 
-    setCamera2(){
+    setCamera2() {
         this.camera.position.set(0, 100, -180)
         this.camera.lookAt(this.scene.position)
     }
 
-    
+    enableSceneClick() {
+        window.addEventListener("mousedown", (e) => {
+
+            console.log(e);
+
+            const raycaster = new THREE.Raycaster(); // obiekt Raycastera symulujący "rzucanie" promieni
+            const mouseVector = new THREE.Vector2() // ten wektor czyli pozycja w przestrzeni 2D na ekranie(x,y) wykorzystany będzie do określenie pozycji myszy na ekranie, a potem przeliczenia na pozycje 3D
+
+            mouseVector.x = (e.clientX / window.innerWidth) * 2 - 1;
+            mouseVector.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+            raycaster.setFromCamera(mouseVector, this.camera);
+
+            const intersects = raycaster.intersectObjects(this.scene.children);
+
+            if (intersects.length > 0) {
+
+                // zerowy w tablicy czyli najbliższy kamery obiekt to ten, którego potrzebujemy:
+
+                console.log(intersects[0].object);
+                intersects[0].object.selected()
+
+            }
+
+        });
+
+    }
+
+
 
     render = () => {
         requestAnimationFrame(this.render);
@@ -141,4 +143,4 @@ class Game {
     }
 }
 
-export {Game}
+export { Game }
