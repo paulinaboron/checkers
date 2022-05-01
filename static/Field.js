@@ -13,11 +13,18 @@ class Field extends THREE.Mesh {
         })
 
         this.position.set(x, y, z)
+
+        this.side = (color == "imgs/white.jpg") ? "white" : "black"
     }
 
 
     selected() {
         this.material.color = { r: .8, g: .6, b: .8 }
+    }
+
+
+    deselected(){
+        this.material.color = { r: 1, g: 1, b: 1 }
     }
 
 

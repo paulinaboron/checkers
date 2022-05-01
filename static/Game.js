@@ -30,6 +30,9 @@ class Game {
             [0, 1, 0, 1, 0, 1, 0, 1]
         ];
 
+        this.clickedPawn = null
+        this.clickedField = null
+
         let i = -70
         this.szachownica.forEach(row => {
             let j = -70
@@ -103,12 +106,13 @@ class Game {
     }
 
     enableSceneClick() {
+
         window.addEventListener("mousedown", (e) => {
 
             console.log(e);
 
-            const raycaster = new THREE.Raycaster(); // obiekt Raycastera symulujący "rzucanie" promieni
-            const mouseVector = new THREE.Vector2() // ten wektor czyli pozycja w przestrzeni 2D na ekranie(x,y) wykorzystany będzie do określenie pozycji myszy na ekranie, a potem przeliczenia na pozycje 3D
+            const raycaster = new THREE.Raycaster();
+            const mouseVector = new THREE.Vector2();
 
             mouseVector.x = (e.clientX / window.innerWidth) * 2 - 1;
             mouseVector.y = -(e.clientY / window.innerHeight) * 2 + 1;
@@ -119,10 +123,42 @@ class Game {
 
             if (intersects.length > 0) {
 
-                // zerowy w tablicy czyli najbliższy kamery obiekt to ten, którego potrzebujemy:
+                console.log(intersects[0].object.side);
+                console.log(intersects[0].object.constructor.name)
 
-                console.log(intersects[0].object);
-                intersects[0].object.selected()
+                if (intersects[0].object.constructor.name == "Pionek" && sessionStorage.getItem('side') == intersects[0].object.side) {
+
+                    if (this.clickedPawn != null) {
+                        this.clickedPawn.deselected()
+                    }
+
+                    this.clickedPawn = intersects[0].object
+                    this.clickedPawn.selected()
+
+                    
+                }
+                else if (intersects[0].object.constructor.name == "Field" && intersects[0].object.side == "black") {
+
+                    if (this.clickedField != null) {
+                        this.clickedField.deselected()
+                    }
+
+                    this.clickedField = intersects[0].object
+                    this.clickedField.selected()
+
+                    if (this.clickedPawn != null) {
+                        console.log(this.clickedField.position);
+                        this.clickedPawn.move(this.clickedField.position)
+                        
+                        this.clickedPawn.deselected()
+                        this.clickedField.deselected()
+
+                        this.clickedPawn = null
+                        this.clickedField = null
+                    }
+                }
+
+
 
             }
 
@@ -139,6 +175,8 @@ class Game {
         this.camera.aspect = window.innerWidth / window.innerHeight;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
+
+        TWEEN.update();
 
     }
 }

@@ -1,4 +1,4 @@
-import { ui } from "./Main.js"
+import { game, ui } from "./Main.js"
 
 class Net {
 
@@ -10,7 +10,6 @@ class Net {
     addPlayer(username) {
 
         const body = JSON.stringify({ "username": username }) // body czyli przesyłane na serwer dane
-
         const headers = { "Content-Type": "application/json" } // nagłowek czyli typ danych
 
         fetch("/ADD_USER", { method: "post", body, headers }) // fetch
@@ -21,9 +20,10 @@ class Net {
                     if (data.nrOfPlayers == 1) {
                         ui.onePlayer()
                         let info = "Hej " + data.username + ", grasz białymi"
+                        sessionStorage.setItem('side', 'white');
                         ui.setStatus(info)
 
-                        setInterval(function () {
+                        var interval = setInterval(function () {
 
                             const body = JSON.stringify({ w: 1 })
                             const headers = { "Content-Type": "application/json" }
@@ -33,6 +33,12 @@ class Net {
                                 .then(
                                     data => {
                                         console.log(data, "data")
+                                        if (data.nrOfPlayers == 2) {
+                                            clearInterval(interval)
+                                            ui.setStatus("Dołączył drugi gracz: ")
+                                            ui.stopWaiting()
+                                            game.enableSceneClick()
+                                        }
                                     }
                                 )
 
@@ -41,7 +47,11 @@ class Net {
                     } else if (data.nrOfPlayers == 2) {
                         ui.twoPlayers()
                         let info = "Hej " + data.username + ", grasz czarnymi"
+                        sessionStorage.setItem('side', 'black');
                         ui.setStatus(info)
+                    }
+                    else if(data.nrOfPlayers == 999){
+                        ui.setStatus("Wprowadź inny login")
                     }
                     else {
                         console.log("more");

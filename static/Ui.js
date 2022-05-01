@@ -38,6 +38,10 @@ class Ui {
         game.enableSceneClick()
     }
 
+    stopWaiting(){
+        document.getElementById("wait").classList.add("hidden")
+    }
+
     moreThanTwoPlayers() {
         console.log("3 & more");
     }

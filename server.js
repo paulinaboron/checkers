@@ -7,7 +7,8 @@ app.use(express.static('static'))
 app.use(express.json())
 
 
-const Datastore = require('nedb')
+const Datastore = require('nedb');
+const e = require("express");
 
 const players = new Datastore({
     filename: 'players.db',
@@ -28,7 +29,6 @@ app.post("/ADD_USER", (req, res) => {
         console.log("players", playersCount);
 
 
-
         if (playersCount == 0) {
             let doc = {
                 username: req.body.username,
@@ -43,34 +43,32 @@ app.post("/ADD_USER", (req, res) => {
                 });
             });
         } else if (playersCount == 1) {
-            // players.find({ username: req.body.username }, function (err, docs) {
-            //     if (docs == []) {
-            //         let doc = {
-            //             username: req.body.username,
-            //             color: "black"
-            //         }
-            //         players.insert(doc, function (err, newDoc) {
-            //             console.log("dodano dokument (obiekt): ", newDoc)
 
-            //             players.count({}, function (err, count) {
-            //                 console.log("dokumentów jest: ", count)
-            //                 res.send({ nrOfPlayers: count, username: req.body.username })
-            //             });
-            //         });
-            //     }
-            // });
-            let doc = {
-                username: req.body.username,
-                color: "black"
-            }
-            players.insert(doc, function (err, newDoc) {
-                console.log("dodano dokument (obiekt): ", newDoc)
+            players.find({ color: "white" }, function (err, docs) {
+                console.log(JSON.stringify({ "docsy": docs }, null, 5))
 
-                players.count({}, function (err, count) {
-                    console.log("dokumentów jest: ", count)
-                    res.send({ nrOfPlayers: count, username: req.body.username })
-                });
+                if (docs[0].username == req.body.username) {
+                    res.send({ nrOfPlayers: 999, username: req.body.username })
+                } else {
+                    let doc = {
+                        username: req.body.username,
+                        color: "black"
+                    }
+                    players.insert(doc, function (err, newDoc) {
+                        console.log("dodano dokument (obiekt): ", newDoc)
+
+                        players.count({}, function (err, count) {
+                            console.log("dokumentów jest: ", count)
+                            res.send({ nrOfPlayers: count, username: req.body.username })
+                        });
+                    });
+                }
+
             });
+
+
+        } else {
+            res.send({ nrOfPlayers: 3, username: null })
         }
     });
 })
@@ -80,7 +78,7 @@ app.post("/REMOVE_ALL", (req, res) => {
         console.log("usunięto wszystkie dokumenty: ", numRemoved)
     });
 
-    res.send("usunięto wszystko")
+    res.send({ "usunięto": "wszystko" })
 })
 
 app.post("/WAITING", (req, res) => {

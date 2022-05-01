@@ -1,7 +1,7 @@
 class Pionek extends THREE.Mesh {
 
     constructor(color, x, y, z) {
-        super() // wywołanie konstruktora klasy z której dziedziczymy czyli z Mesha
+        super()
         this.geometry = new THREE.CylinderGeometry(7, 7, 7, 32);
 
         this.material = new THREE.MeshPhongMaterial({
@@ -13,6 +13,8 @@ class Pionek extends THREE.Mesh {
         })
 
         this.position.set(x, y, z)
+
+        this.side = (color == "imgs/pink.jpg") ? "white" : "black"
     }
 
     selected() {
@@ -20,6 +22,20 @@ class Pionek extends THREE.Mesh {
     }
 
 
+    deselected() {
+        this.material.color = { r: 1, g: 1, b: 1 }
+    }
+
+    move(pos) {
+
+        new TWEEN.Tween(this.position) // co
+            .to({ x: pos.x, z: pos.z }, 500) // do jakiej pozycji, w jakim czasie
+            .repeat(0) // liczba powtórzeń
+            .easing(TWEEN.Easing.Cubic.InOut) // typ easingu (zmiana w czasie)
+            .onComplete(() => { console.log("koniec animacji") }) // funkcja po zakończeniu animacji
+        .start()
+
+    }
 
 }
 export { Pionek }
