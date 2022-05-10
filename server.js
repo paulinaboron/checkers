@@ -15,6 +15,18 @@ const players = new Datastore({
     autoload: true
 });
 
+
+const currentTab = [
+    [0, 2, 0, 2, 0, 2, 0, 2],
+    [2, 0, 2, 0, 2, 0, 2, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0]
+]
+
 app.get("/", function (req, res) {
     res.sendFile(path.join(__dirname + "/static/index.html"))
 
@@ -85,6 +97,31 @@ app.post("/WAITING", (req, res) => {
     players.count({}, function (err, count) {
         res.send({ nrOfPlayers: count })
     });
+})
+
+app.post("/GET_TAB_INFO", (req, res)=>{
+    res.send({currTab: currentTab})
+})
+
+app.post("/PAWN_MOVED", (req, res) =>{
+    res.send(req.body)
+
+    let oldX = req.body.oldPos.x
+    let oldZ = req.body.oldPos.z
+
+    let newX = req.body.newPos.x
+    let newZ = req.body.newPos.z
+
+    oldX = (oldX + 70)/20
+    oldZ = (oldZ + 70)/20
+    newX = (newX + 70)/20
+    newZ = (newZ + 70)/20
+
+    console.log(oldX, oldZ, newX, newZ);
+
+    let temp = currentTab[oldZ][oldX]
+    currentTab[oldZ][oldX] = 0
+    currentTab[newZ][newX] = temp
 })
 
 

@@ -1,5 +1,6 @@
 import { Pionek } from "./Pionek.js"
 import { Field } from "./Field.js"
+import { ui } from "./Main.js";
 
 class Game {
 
@@ -155,6 +156,8 @@ class Game {
 
                         this.clickedPawn = null
                         this.clickedField = null
+
+                        ui.getTabInfo()
                     }
                 }
 

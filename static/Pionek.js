@@ -35,6 +35,17 @@ class Pionek extends THREE.Mesh {
             .onComplete(() => { console.log("koniec animacji") }) // funkcja po zakończeniu animacji
         .start()
 
+        const body = JSON.stringify({ oldPos: this.position, newPos:  { x: pos.x, y: 0, z: pos.z }})
+        const headers = { "Content-Type": "application/json" }
+
+        fetch("/PAWN_MOVED", { method: "post", body, headers })
+            .then(response => response.json())
+            .then(
+                data => {
+                    console.log(data, "data")
+                }
+            )
+
     }
 
 }
