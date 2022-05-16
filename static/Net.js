@@ -74,6 +74,19 @@ class Net {
                 }
             )
     }
+
+    endOfGame(res){
+        const body = JSON.stringify({ side: sessionStorage.getItem('side'),  result: res})
+        const headers = { "Content-Type": "application/json" }
+
+        fetch("/END_OF_GAME", { method: "post", body, headers })
+            .then(response => response.json())
+            .then(
+                data => {
+                    console.log(data, "data")
+                }
+            )
+    }
 }
 
 export { Net }

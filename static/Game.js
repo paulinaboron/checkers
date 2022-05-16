@@ -57,6 +57,9 @@ class Game {
 
         this.render() // wywołanie metody render
 
+        this.sceneClickIsActive = true
+        this.pawnName = null
+
 
         // window.addEventListener("mousedown", (e) => {
         //     this.sceneClick(e)
@@ -82,11 +85,13 @@ class Game {
             row.forEach(pawn => {
                 if (pawn != 0) {
                     if (pawn == 1) {
-                        const pio = new Pionek("imgs/pink.jpg", j, 0, i)
+                        let name = "p" + i + "_" + j
+                        const pio = new Pionek("imgs/pink.jpg", j, 0, i, name)
                         this.scene.add(pio)
 
                     } else {
-                        const pio = new Pionek("imgs/blue.jpg", j, 0, i)
+                        let name = "p" + i + "_" + j
+                        const pio = new Pionek("imgs/blue.jpg", j, 0, i, name)
                         this.scene.add(pio)
                     }
                 }
@@ -110,64 +115,68 @@ class Game {
 
         window.addEventListener("mousedown", (e) => {
 
-            console.log(e);
+            if (this.sceneClickIsActive) {
 
-            const raycaster = new THREE.Raycaster();
-            const mouseVector = new THREE.Vector2();
+                console.log(e);
 
-            mouseVector.x = (e.clientX / window.innerWidth) * 2 - 1;
-            mouseVector.y = -(e.clientY / window.innerHeight) * 2 + 1;
+                const raycaster = new THREE.Raycaster();
+                const mouseVector = new THREE.Vector2();
 
-            raycaster.setFromCamera(mouseVector, this.camera);
+                mouseVector.x = (e.clientX / window.innerWidth) * 2 - 1;
+                mouseVector.y = -(e.clientY / window.innerHeight) * 2 + 1;
 
-            const intersects = raycaster.intersectObjects(this.scene.children);
+                raycaster.setFromCamera(mouseVector, this.camera);
 
-            if (intersects.length > 0) {
+                const intersects = raycaster.intersectObjects(this.scene.children);
 
-                console.log(intersects[0].object.side);
-                console.log(intersects[0].object.constructor.name)
+                if (intersects.length > 0) {
 
-                if (intersects[0].object.constructor.name == "Pionek" && sessionStorage.getItem('side') == intersects[0].object.side) {
+                    console.log(intersects[0].object.name);
+                    console.log(intersects[0].object.constructor.name)
 
-                    if (this.clickedPawn != null) {
-                        this.clickedPawn.deselected()
+                    if (intersects[0].object.constructor.name == "Pionek" && sessionStorage.getItem('side') == intersects[0].object.side) {
+
+                        if (this.clickedPawn != null) {
+                            this.clickedPawn.deselected()
+                        }
+
+                        this.clickedPawn = intersects[0].object
+                        this.clickedPawn.selected()
+                        this.pawnName = intersects[0].object.name
+
+
+                    }
+                    else if (intersects[0].object.constructor.name == "Field" && intersects[0].object.side == "black") {
+
+                        if (this.clickedField != null) {
+                            this.clickedField.deselected()
+                        }
+
+                        this.clickedField = intersects[0].object
+                        this.clickedField.selected()
+
+                        if (this.clickedPawn != null) {
+                            console.log(this.clickedField.position);
+                            this.clickedPawn.move(this.clickedField.position, this.pawnName)
+
+                            this.clickedPawn.deselected()
+                            this.clickedField.deselected()
+
+                            this.clickedPawn = null
+                            this.clickedField = null
+
+                            ui.getTabInfo()
+                        }
                     }
 
-                    this.clickedPawn = intersects[0].object
-                    this.clickedPawn.selected()
 
-                    
+
                 }
-                else if (intersects[0].object.constructor.name == "Field" && intersects[0].object.side == "black") {
-
-                    if (this.clickedField != null) {
-                        this.clickedField.deselected()
-                    }
-
-                    this.clickedField = intersects[0].object
-                    this.clickedField.selected()
-
-                    if (this.clickedPawn != null) {
-                        console.log(this.clickedField.position);
-                        this.clickedPawn.move(this.clickedField.position)
-                        
-                        this.clickedPawn.deselected()
-                        this.clickedField.deselected()
-
-                        this.clickedPawn = null
-                        this.clickedField = null
-
-                        ui.getTabInfo()
-                    }
-                }
-
-
-
-            }
-
+            } else console.log("scene click not active");
         });
 
     }
+    
 
 
 

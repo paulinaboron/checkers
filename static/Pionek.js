@@ -1,7 +1,10 @@
+import { ui } from "./Main.js";
+
 class Pionek extends THREE.Mesh {
 
-    constructor(color, x, y, z) {
+    constructor(color, x, y, z, name) {
         super()
+        this.name = name
         this.geometry = new THREE.CylinderGeometry(7, 7, 7, 32);
 
         this.material = new THREE.MeshPhongMaterial({
@@ -26,7 +29,7 @@ class Pionek extends THREE.Mesh {
         this.material.color = { r: 1, g: 1, b: 1 }
     }
 
-    move(pos) {
+    move(pos, name) {
 
         new TWEEN.Tween(this.position) // co
             .to({ x: pos.x, z: pos.z }, 500) // do jakiej pozycji, w jakim czasie
@@ -35,7 +38,7 @@ class Pionek extends THREE.Mesh {
             .onComplete(() => { console.log("koniec animacji") }) // funkcja po zakończeniu animacji
         .start()
 
-        const body = JSON.stringify({ oldPos: this.position, newPos:  { x: pos.x, y: 0, z: pos.z }})
+        const body = JSON.stringify({ oldPos: this.position, newPos:  { x: pos.x, y: 0, z: pos.z }, pawn: name})
         const headers = { "Content-Type": "application/json" }
 
         fetch("/PAWN_MOVED", { method: "post", body, headers })
@@ -43,10 +46,12 @@ class Pionek extends THREE.Mesh {
             .then(
                 data => {
                     console.log(data, "data")
+                    ui.startTimer()
                 }
             )
 
     }
+
 
 }
 export { Pionek }

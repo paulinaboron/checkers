@@ -6,6 +6,8 @@ class Ui {
 
         document.getElementById("login").onclick = this.loginClick
         document.getElementById("reset").onclick = this.resetClick
+
+        this.interv = null
     }
 
 
@@ -34,7 +36,6 @@ class Ui {
         console.log("2 players");
         game.setPawns()
         document.getElementById("menu").classList.add("hidden")
-        document.getElementById("clock").classList.remove("hidden")
         this.startTimer()
 
         game.setCamera2()
@@ -81,25 +82,57 @@ class Ui {
     }
 
     startTimer() {
+        document.getElementById("clock").classList.remove("hidden")
+        game.sceneClickIsActive = false
         let nr = 30
         let interv = setInterval(function () {
-            nr = document.getElementById("timer").innerText
-            console.log(nr);
 
             document.getElementById("timer").innerText = --nr
 
+            if (nr == 0) {
+                clearInterval(interv);
+                document.getElementById("timer").innerText = "Koniec czasu"
+                net.endOfGame('lost')
+            }
+
+            fetch("/WAITING_FOR_MOVE", { method: "post" })
+                .then(response => response.json())
+                .then(
+                    data => {
+                        console.log(data, "data")
+                        if (data.moveDone == true) {
+                            clearInterval(interv);
+                            document.getElementById("clock").classList.add("hidden")
+                            game.sceneClickIsActive = true
+
+                            
+
+                            // data.pawn.position.set(data.pos.x, 0, data.pos.z)
+                            console.log(data.pawn);
+
+                            let pawnToMove = game.scene.getObjectByName(data.pawn, true);
+                            console.log(pawnToMove);
+
+                            new TWEEN.Tween(pawnToMove.position) // co
+                                .to({ x: data.pos.x, z: data.pos.z }, 500) // do jakiej pozycji, w jakim czasie
+                                .repeat(0) // liczba powtórzeń
+                                .easing(TWEEN.Easing.Cubic.InOut) // typ easingu (zmiana w czasie)
+                                .onComplete(() => { console.log("koniec animacji") }) // funkcja po zakończeniu animacji
+                                .start()
+
+                        }
+                    }
+                )
+
         }, 1000);
-
-        if (nr == 0) {
-            this.stopTimer(interv)
-            document.getElementById("timer").innerText = "Koniec czasu"
-        }
-
     }
 
-    stopTimer(interval) {
-        clearInterval(interval);
+    stopTimer() {
+        clearInterval(this.interv);
+        document.getElementById("clock").classList.add("hidden")
+        game.sceneClickIsActive = true
     }
+
 }
 
 export { Ui }

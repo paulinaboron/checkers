@@ -15,6 +15,11 @@ const players = new Datastore({
     autoload: true
 });
 
+let playerMadeMove = false
+let movedPawn = null
+let movedPawnX = 0
+let movedPawnZ = 0
+
 
 const currentTab = [
     [0, 2, 0, 2, 0, 2, 0, 2],
@@ -112,6 +117,9 @@ app.post("/PAWN_MOVED", (req, res) =>{
     let newX = req.body.newPos.x
     let newZ = req.body.newPos.z
 
+    movedPawnX = req.body.newPos.x
+    movedPawnZ = req.body.newPos.z
+
     oldX = (oldX + 70)/20
     oldZ = (oldZ + 70)/20
     newX = (newX + 70)/20
@@ -122,6 +130,18 @@ app.post("/PAWN_MOVED", (req, res) =>{
     let temp = currentTab[oldZ][oldX]
     currentTab[oldZ][oldX] = 0
     currentTab[newZ][newX] = temp
+
+    playerMadeMove = true
+    movedPawn = req.body.pawn
+})
+
+app.post("/END_OF_GAME", (req, res)=>{
+    res.send(req.body)
+})
+
+app.post("/WAITING_FOR_MOVE", (req, res)=>{
+    res.send({moveDone: playerMadeMove, pawn: movedPawn, pos: {x: movedPawnX, z: movedPawnZ}})
+    playerMadeMove = false
 })
 
 
