@@ -105,8 +105,6 @@ class Ui {
                             document.getElementById("clock").classList.add("hidden")
                             game.sceneClickIsActive = true
 
-                            
-
                             // data.pawn.position.set(data.pos.x, 0, data.pos.z)
                             console.log(data.pawn);
 

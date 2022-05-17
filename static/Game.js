@@ -33,17 +33,22 @@ class Game {
 
         this.clickedPawn = null
         this.clickedField = null
+        this.fieldsOptions = []
+
+        this.pawnToDelete = null
+        this.deletingField = null
 
         let i = -70
         this.szachownica.forEach(row => {
             let j = -70
             row.forEach(field => {
                 let material
+                let name = "f" + i + "_" + j
                 if (field == 1) {
-                    const field = new Field("imgs/white.jpg", j, -5, i)
+                    const field = new Field("imgs/white.jpg", j, -5, i, name)
                     this.scene.add(field)
                 } else {
-                    const field = new Field("imgs/gray.jpg", j, -5, i)
+                    const field = new Field("imgs/gray.jpg", j, -5, i, name)
                     this.scene.add(field)
                 }
                 j += 20
@@ -52,18 +57,10 @@ class Game {
         });
 
 
-        const axes = new THREE.AxesHelper(1000)
-        this.scene.add(axes)
-
         this.render() // wywołanie metody render
 
         this.sceneClickIsActive = true
         this.pawnName = null
-
-
-        // window.addEventListener("mousedown", (e) => {
-        //     this.sceneClick(e)
-        // });
 
     }
 
@@ -138,15 +135,105 @@ class Game {
 
                         if (this.clickedPawn != null) {
                             this.clickedPawn.deselected()
+
                         }
 
                         this.clickedPawn = intersects[0].object
                         this.clickedPawn.selected()
                         this.pawnName = intersects[0].object.name
 
+                        var fields = this.scene.children.filter(function (e) {
+                            return e.constructor.name == "Field";
+                        });
+
+                        var opposidePawns = this.scene.children.filter(function (e) {
+                            return e.constructor.name == "Pionek" && e.side != sessionStorage.getItem('side');
+                        });
+                        console.log(opposidePawns)
+
+                        fields.forEach(e => {
+                            if (sessionStorage.getItem('side') == 'white') {
+
+                                if (e.position.x == (this.clickedPawn.position.x + 20) || e.position.x == (this.clickedPawn.position.x - 20)) {
+
+                                    if (e.position.z == (this.clickedPawn.position.z - 20)) {
+                                        e.material.color = { r: .8, g: .6, b: .8 }
+                                        this.fieldsOptions.push(e.name)
+                                    }
+
+                                }
+
+
+                            } else {
+                                if (e.position.x == (this.clickedPawn.position.x + 20) || e.position.x == (this.clickedPawn.position.x - 20)) {
+
+                                    if (e.position.z == (this.clickedPawn.position.z + 20)) {
+                                        e.material.color = { r: .8, g: .6, b: .8 }
+                                        this.fieldsOptions.push(e.name)
+                                    }
+
+                                }
+                            }
+                        });
+
+                        opposidePawns.forEach(e => {
+                            if (sessionStorage.getItem('side') == 'white') {
+
+                                if (e.position.x == (this.clickedPawn.position.x + 20)) {
+
+                                    if (e.position.z == (this.clickedPawn.position.z - 20)) {
+                                        fields.forEach(f => {
+
+                                            if ((f.position.x == (this.clickedPawn.position.x + 40)) && f.position.z == (this.clickedPawn.position.z - 40)) {
+                                                this.fieldsOptions.push(f.name)
+                                                f.material.color = { r: .8, g: .6, b: .8 }
+                                                this.deletingField = f
+                                                this.pawnToDelete = e
+                                            }
+                                        });
+
+                                    }
+
+                                }
+
+                                if (e.position.x == (this.clickedPawn.position.x - 20)) {
+
+                                    if (e.position.z == (this.clickedPawn.position.z - 20)) {
+                                        fields.forEach(f => {
+                                            if (f.position.x == (this.clickedPawn.position.x - 40) && f.position.z == (this.clickedPawn.position.z - 40)) {
+                                                this.fieldsOptions.push(f.name)
+                                                f.material.color = { r: .8, g: .6, b: .8 }
+                                                this.deletingField = f
+                                                this.pawnToDelete = e
+                                            }
+
+                                        });
+
+                                    }
+
+                                }
+
+
+                            } else {
+                                if (e.position.x == (this.clickedPawn.position.x + 20) || e.position.x == (this.clickedPawn.position.x - 20)) {
+
+                                    if (e.position.z == (this.clickedPawn.position.z + 20)) {
+                                        fields.forEach(f => {
+                                            if ((f.position.x == (this.clickedPawn.position.x + 40) || f.position.x == (this.clickedPawn.position.x - 40)) && f.position.z == (this.clickedPawn.position.z + 40)) {
+                                                this.fieldsOptions.push(f.name)
+                                                f.material.color = { r: .8, g: .6, b: .8 }
+                                            }
+                                        });
+
+                                    }
+
+                                }
+                            }
+                        });
+
 
                     }
-                    else if (intersects[0].object.constructor.name == "Field" && intersects[0].object.side == "black") {
+                    else if (intersects[0].object.constructor.name == "Field" && this.fieldsOptions.includes(intersects[0].object.name)) {
 
                         if (this.clickedField != null) {
                             this.clickedField.deselected()
@@ -176,7 +263,7 @@ class Game {
         });
 
     }
-    
+
 
 
 

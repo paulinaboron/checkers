@@ -1,4 +1,4 @@
-import { ui } from "./Main.js";
+import { ui, game } from "./Main.js";
 
 class Pionek extends THREE.Mesh {
 
@@ -21,6 +21,10 @@ class Pionek extends THREE.Mesh {
     }
 
     selected() {
+        game.scene.children.forEach(element => {
+            if(element.constructor.name == "Field") element.material.color = { r: 1, g: 1, b: 1 }
+        });
+
         this.material.color = { r: .8, g: .6, b: .8 }
     }
 
@@ -49,6 +53,12 @@ class Pionek extends THREE.Mesh {
                     ui.startTimer()
                 }
             )
+
+            game.scene.children.forEach(element => {
+                if(element.constructor.name == "Field") element.material.color = { r: 1, g: 1, b: 1 }
+            });
+
+            game.fieldsOptions = []
 
     }
 
