@@ -77,6 +77,8 @@ class Ui {
                         });
                     }
 
+                    game.szachownica = data.currTab
+
                 }
             )
     }

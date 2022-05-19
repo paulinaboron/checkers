@@ -42,7 +42,6 @@ class Game {
         this.szachownica.forEach(row => {
             let j = -70
             row.forEach(field => {
-                let material
                 let name = "f" + i + "_" + j
                 if (field == 1) {
                     const field = new Field("imgs/white.jpg", j, -5, i, name)
@@ -58,6 +57,8 @@ class Game {
 
 
         this.render() // wywołanie metody render
+        let axes = new THREE.AxesHelper(100)
+        this.scene.add(axes)
 
         this.sceneClickIsActive = true
         this.pawnName = null
@@ -141,6 +142,7 @@ class Game {
                         this.clickedPawn = intersects[0].object
                         this.clickedPawn.selected()
                         this.pawnName = intersects[0].object.name
+                        this.fieldsOptions = []
 
                         var fields = this.scene.children.filter(function (e) {
                             return e.constructor.name == "Field";
@@ -157,8 +159,13 @@ class Game {
                                 if (e.position.x == (this.clickedPawn.position.x + 20) || e.position.x == (this.clickedPawn.position.x - 20)) {
 
                                     if (e.position.z == (this.clickedPawn.position.z - 20)) {
-                                        e.material.color = { r: .8, g: .6, b: .8 }
-                                        this.fieldsOptions.push(e.name)
+                                        let idX = (e.position.x + 70) / 20
+                                        let idZ = (e.position.z + 70) / 20
+                                        if (this.szachownica[idZ][idX] == 0) {
+                                            e.material.color = { r: .8, g: .6, b: .8 }
+                                            this.fieldsOptions.push(e.name)
+                                        }
+
                                     }
 
                                 }
@@ -168,8 +175,12 @@ class Game {
                                 if (e.position.x == (this.clickedPawn.position.x + 20) || e.position.x == (this.clickedPawn.position.x - 20)) {
 
                                     if (e.position.z == (this.clickedPawn.position.z + 20)) {
-                                        e.material.color = { r: .8, g: .6, b: .8 }
-                                        this.fieldsOptions.push(e.name)
+                                        let idX = (e.position.x + 70) / 20
+                                        let idZ = (e.position.z + 70) / 20
+                                        if (this.szachownica[idZ][idX] == 0) {
+                                            e.material.color = { r: .8, g: .6, b: .8 }
+                                            this.fieldsOptions.push(e.name)
+                                        }
                                     }
 
                                 }
@@ -189,6 +200,12 @@ class Game {
                                                 f.material.color = { r: .8, g: .6, b: .8 }
                                                 this.deletingField = f
                                                 this.pawnToDelete = e
+                                                console.log(e.name);
+                                                console.log(f.name);
+                                                let p = this.clickedPawn
+                                                this.fieldsOptions = this.fieldsOptions.filter(function (value) {
+                                                    return value != 'f' + (p.position.x + 20) + '_' + (p.position.z - 20);
+                                                });
                                             }
                                         });
 
@@ -205,6 +222,13 @@ class Game {
                                                 f.material.color = { r: .8, g: .6, b: .8 }
                                                 this.deletingField = f
                                                 this.pawnToDelete = e
+                                                console.log(e.name);
+                                                console.log(f.name);
+
+                                                let p = this.clickedPawn
+                                                this.fieldsOptions = this.fieldsOptions.filter(function (value) {
+                                                    return value != 'f' + (p.position.x - 20) + '_' + (p.position.z - 20);
+                                                });
                                             }
 
                                         });
@@ -220,8 +244,12 @@ class Game {
                                     if (e.position.z == (this.clickedPawn.position.z + 20)) {
                                         fields.forEach(f => {
                                             if ((f.position.x == (this.clickedPawn.position.x + 40) || f.position.x == (this.clickedPawn.position.x - 40)) && f.position.z == (this.clickedPawn.position.z + 40)) {
-                                                this.fieldsOptions.push(f.name)
-                                                f.material.color = { r: .8, g: .6, b: .8 }
+                                                let idX = (e.position.x + 70) / 20
+                                                let idZ = (e.position.z + 70) / 20
+                                                if (this.szachownica[idZ][idX] == 0) {
+                                                    e.material.color = { r: .8, g: .6, b: .8 }
+                                                    this.fieldsOptions.push(e.name)
+                                                }
                                             }
                                         });
 

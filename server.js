@@ -21,7 +21,7 @@ let movedPawnX = 0
 let movedPawnZ = 0
 
 
-const currentTab = [
+let currentTab = [
     [0, 2, 0, 2, 0, 2, 0, 2],
     [2, 0, 2, 0, 2, 0, 2, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
@@ -94,6 +94,16 @@ app.post("/REMOVE_ALL", (req, res) => {
     players.remove({}, { multi: true }, function (err, numRemoved) {
         console.log("usunięto wszystkie dokumenty: ", numRemoved)
     });
+    currentTab = [
+        [0, 2, 0, 2, 0, 2, 0, 2],
+        [2, 0, 2, 0, 2, 0, 2, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 1, 0, 1, 0, 1, 0, 1],
+        [1, 0, 1, 0, 1, 0, 1, 0]
+    ]
 
     res.send({ "usunięto": "wszystko" })
 })

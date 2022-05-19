@@ -26,6 +26,7 @@ class Pionek extends THREE.Mesh {
         });
 
         this.material.color = { r: .8, g: .6, b: .8 }
+        console.log(this.name);
     }
 
 
