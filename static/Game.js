@@ -213,7 +213,7 @@ class Game {
                 this.fieldsOptions.push(f1.name)
             }
             else if (this.szachownica[idZ][idX] == 2) {
-                this.extraMove(idZ - 1, idX - 1)
+                this.extraMove(idZ - 1, idX - 1, this.clickedPawn.position.z - 20, this.clickedPawn.position.x - 20)
             }
 
         } catch (err) {
@@ -231,14 +231,14 @@ class Game {
                 this.fieldsOptions.push(f2.name)
             }
             else if (this.szachownica[idZ][idX] == 2) {
-                this.extraMove(idZ - 1, idX + 1)
+                this.extraMove(idZ - 1, idX + 1, this.clickedPawn.position.z - 20, this.clickedPawn.position.x + 20)
             }
         } catch (err) {
             console.log(err);
         }
     }
 
-    extraMove(idZ, idX) {
+    extraMove(idZ, idX, pawnZ, pawnX) {
         try {
             if (this.szachownica[idZ][idX] == 0) {
                 let posX = idX * 20 - 70
@@ -248,12 +248,28 @@ class Game {
                 f.material.color = { r: .8, g: .6, b: .8 }
                 this.fieldsOptions.push(f.name)
 
-                this.deletingPawns[f.name] = 1
+                this.deletingPawns[f.name] = this.findPawn(pawnZ, pawnX)
             }
         } catch (err) {
             console.log(err);
         }
 
+    }
+
+    findPawn(posZ, posX){
+        var pawns = this.scene.children.filter(function (e) {
+            return e.constructor.name == "Pionek";
+        });
+
+        pawns.forEach(p => {
+            if(p.position.x == posX && p.position.z == posZ){
+                console.log(p.name, "====p.name====");
+                p.material.color = { r: .1, g: .1, b: .8 }
+                return p.name
+            }
+        });
+        
+        return null
     }
 
     basicMoveBlack() {
@@ -267,7 +283,7 @@ class Game {
                 f1.material.color = { r: .8, g: .6, b: .8 }
                 this.fieldsOptions.push(f1.name)
             } else if (this.szachownica[idZ][idX] == 1) {
-                this.extraMove(idZ + 1, idX - 1)
+                this.extraMove(idZ + 1, idX - 1, this.clickedPawn.position.z + 20, this.clickedPawn.position.x - 20)
             }
         } catch (err) {
             console.log(err);
@@ -283,7 +299,7 @@ class Game {
                 f2.material.color = { r: .8, g: .6, b: .8 }
                 this.fieldsOptions.push(f2.name)
             } else if (this.szachownica[idZ][idX] == 1) {
-                this.extraMove(idZ + 1, idX + 1)
+                this.extraMove(idZ + 1, idX + 1, this.clickedPawn.position.z + 20, this.clickedPawn.position.x + 20)
             }
         } catch (err) {
             console.log(err);
