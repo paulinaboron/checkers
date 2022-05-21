@@ -1,4 +1,4 @@
-import { net, game } from "./Main.js"
+import { net, game, ui } from "./Main.js"
 
 class Ui {
 
@@ -104,10 +104,10 @@ class Ui {
                         console.log(data, "data")
                         if (data.moveDone == true) {
                             clearInterval(interv);
+                            ui.getTabInfo()
                             document.getElementById("clock").classList.add("hidden")
                             game.sceneClickIsActive = true
 
-                            // data.pawn.position.set(data.pos.x, 0, data.pos.z)
                             console.log(data.pawn);
 
                             let pawnToMove = game.scene.getObjectByName(data.pawn, true);

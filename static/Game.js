@@ -35,8 +35,7 @@ class Game {
         this.clickedField = null
         this.fieldsOptions = []
 
-        this.pawnToDelete = null
-        this.deletingField = null
+        this.deletingPawns = new Object()
 
         let i = -70
         this.szachownica.forEach(row => {
@@ -134,131 +133,7 @@ class Game {
 
                     if (intersects[0].object.constructor.name == "Pionek" && sessionStorage.getItem('side') == intersects[0].object.side) {
 
-                        if (this.clickedPawn != null) {
-                            this.clickedPawn.deselected()
-
-                        }
-
-                        this.clickedPawn = intersects[0].object
-                        this.clickedPawn.selected()
-                        this.pawnName = intersects[0].object.name
-                        this.fieldsOptions = []
-
-                        var fields = this.scene.children.filter(function (e) {
-                            return e.constructor.name == "Field";
-                        });
-
-                        var opposidePawns = this.scene.children.filter(function (e) {
-                            return e.constructor.name == "Pionek" && e.side != sessionStorage.getItem('side');
-                        });
-                        console.log(opposidePawns)
-
-                        fields.forEach(e => {
-                            if (sessionStorage.getItem('side') == 'white') {
-
-                                if (e.position.x == (this.clickedPawn.position.x + 20) || e.position.x == (this.clickedPawn.position.x - 20)) {
-
-                                    if (e.position.z == (this.clickedPawn.position.z - 20)) {
-                                        let idX = (e.position.x + 70) / 20
-                                        let idZ = (e.position.z + 70) / 20
-                                        if (this.szachownica[idZ][idX] == 0) {
-                                            e.material.color = { r: .8, g: .6, b: .8 }
-                                            this.fieldsOptions.push(e.name)
-                                        }
-
-                                    }
-
-                                }
-
-
-                            } else {
-                                if (e.position.x == (this.clickedPawn.position.x + 20) || e.position.x == (this.clickedPawn.position.x - 20)) {
-
-                                    if (e.position.z == (this.clickedPawn.position.z + 20)) {
-                                        let idX = (e.position.x + 70) / 20
-                                        let idZ = (e.position.z + 70) / 20
-                                        if (this.szachownica[idZ][idX] == 0) {
-                                            e.material.color = { r: .8, g: .6, b: .8 }
-                                            this.fieldsOptions.push(e.name)
-                                        }
-                                    }
-
-                                }
-                            }
-                        });
-
-                        opposidePawns.forEach(e => {
-                            if (sessionStorage.getItem('side') == 'white') {
-
-                                if (e.position.x == (this.clickedPawn.position.x + 20)) {
-
-                                    if (e.position.z == (this.clickedPawn.position.z - 20)) {
-                                        fields.forEach(f => {
-
-                                            if ((f.position.x == (this.clickedPawn.position.x + 40)) && f.position.z == (this.clickedPawn.position.z - 40)) {
-                                                this.fieldsOptions.push(f.name)
-                                                f.material.color = { r: .8, g: .6, b: .8 }
-                                                this.deletingField = f
-                                                this.pawnToDelete = e
-                                                console.log(e.name);
-                                                console.log(f.name);
-                                                let p = this.clickedPawn
-                                                this.fieldsOptions = this.fieldsOptions.filter(function (value) {
-                                                    return value != 'f' + (p.position.x + 20) + '_' + (p.position.z - 20);
-                                                });
-                                            }
-                                        });
-
-                                    }
-
-                                }
-
-                                if (e.position.x == (this.clickedPawn.position.x - 20)) {
-
-                                    if (e.position.z == (this.clickedPawn.position.z - 20)) {
-                                        fields.forEach(f => {
-                                            if (f.position.x == (this.clickedPawn.position.x - 40) && f.position.z == (this.clickedPawn.position.z - 40)) {
-                                                this.fieldsOptions.push(f.name)
-                                                f.material.color = { r: .8, g: .6, b: .8 }
-                                                this.deletingField = f
-                                                this.pawnToDelete = e
-                                                console.log(e.name);
-                                                console.log(f.name);
-
-                                                let p = this.clickedPawn
-                                                this.fieldsOptions = this.fieldsOptions.filter(function (value) {
-                                                    return value != 'f' + (p.position.x - 20) + '_' + (p.position.z - 20);
-                                                });
-                                            }
-
-                                        });
-
-                                    }
-
-                                }
-
-
-                            } else {
-                                if (e.position.x == (this.clickedPawn.position.x + 20) || e.position.x == (this.clickedPawn.position.x - 20)) {
-
-                                    if (e.position.z == (this.clickedPawn.position.z + 20)) {
-                                        fields.forEach(f => {
-                                            if ((f.position.x == (this.clickedPawn.position.x + 40) || f.position.x == (this.clickedPawn.position.x - 40)) && f.position.z == (this.clickedPawn.position.z + 40)) {
-                                                let idX = (e.position.x + 70) / 20
-                                                let idZ = (e.position.z + 70) / 20
-                                                if (this.szachownica[idZ][idX] == 0) {
-                                                    e.material.color = { r: .8, g: .6, b: .8 }
-                                                    this.fieldsOptions.push(e.name)
-                                                }
-                                            }
-                                        });
-
-                                    }
-
-                                }
-                            }
-                        });
-
+                        this.checkPositions(intersects[0])
 
                     }
                     else if (intersects[0].object.constructor.name == "Field" && this.fieldsOptions.includes(intersects[0].object.name)) {
@@ -290,6 +165,129 @@ class Game {
             } else console.log("scene click not active");
         });
 
+    }
+
+
+    checkPositions(pawn) {
+
+        if (this.clickedPawn != null) {
+            this.clickedPawn.deselected()
+
+        }
+
+        this.clickedPawn = pawn.object
+        this.clickedPawn.selected()
+        this.pawnName = pawn.object.name
+        this.fieldsOptions = []
+
+        var fields = this.scene.children.filter(function (e) {
+            return e.constructor.name == "Field";
+        });
+
+        var opposidePawns = this.scene.children.filter(function (e) {
+            return e.constructor.name == "Pionek" && e.side != sessionStorage.getItem('side');
+        });
+        console.log(opposidePawns)
+
+        if (sessionStorage.getItem('side') == 'white') {
+
+            this.basicMoveWhite()
+
+        } if (sessionStorage.getItem('side') == 'black') {
+
+            this.basicMoveBlack()
+
+        }
+
+    }
+
+    basicMoveWhite() {
+        try {
+            let fName1 = 'f' + (this.clickedPawn.position.z - 20) + "_" + (this.clickedPawn.position.x - 20)
+            let f1 = this.scene.getObjectByName(fName1, true);
+
+            let idX = (f1.position.x + 70) / 20
+            let idZ = (f1.position.z + 70) / 20
+            if (this.szachownica[idZ][idX] == 0) {
+                f1.material.color = { r: .8, g: .6, b: .8 }
+                this.fieldsOptions.push(f1.name)
+            }
+            else if (this.szachownica[idZ][idX] == 2) {
+                this.extraMove(idZ - 1, idX - 1)
+            }
+
+        } catch (err) {
+            console.log(err);
+        }
+
+
+        try {
+            let fName2 = 'f' + (this.clickedPawn.position.z - 20) + "_" + (this.clickedPawn.position.x + 20)
+            let f2 = this.scene.getObjectByName(fName2, true);
+            let idX = (f2.position.x + 70) / 20
+            let idZ = (f2.position.z + 70) / 20
+            if (this.szachownica[idZ][idX] == 0) {
+                f2.material.color = { r: .8, g: .6, b: .8 }
+                this.fieldsOptions.push(f2.name)
+            }
+            else if (this.szachownica[idZ][idX] == 2) {
+                this.extraMove(idZ - 1, idX + 1)
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    extraMove(idZ, idX) {
+        try {
+            if (this.szachownica[idZ][idX] == 0) {
+                let posX = idX * 20 - 70
+                let posZ = idZ * 20 - 70
+                let fName = 'f' + posZ + "_" + posX
+                let f = this.scene.getObjectByName(fName, true);
+                f.material.color = { r: .8, g: .6, b: .8 }
+                this.fieldsOptions.push(f.name)
+
+                this.deletingPawns[f.name] = 1
+            }
+        } catch (err) {
+            console.log(err);
+        }
+
+    }
+
+    basicMoveBlack() {
+        try {
+            let fName1 = 'f' + (this.clickedPawn.position.z + 20) + "_" + (this.clickedPawn.position.x - 20)
+            let f1 = this.scene.getObjectByName(fName1, true);
+
+            let idX = (f1.position.x + 70) / 20
+            let idZ = (f1.position.z + 70) / 20
+            if (this.szachownica[idZ][idX] == 0) {
+                f1.material.color = { r: .8, g: .6, b: .8 }
+                this.fieldsOptions.push(f1.name)
+            } else if (this.szachownica[idZ][idX] == 1) {
+                this.extraMove(idZ + 1, idX - 1)
+            }
+        } catch (err) {
+            console.log(err);
+        }
+
+
+        try {
+            let fName2 = 'f' + (this.clickedPawn.position.z + 20) + "_" + (this.clickedPawn.position.x + 20)
+            let f2 = this.scene.getObjectByName(fName2, true);
+            let idX = (f2.position.x + 70) / 20
+            let idZ = (f2.position.z + 70) / 20
+            if (this.szachownica[idZ][idX] == 0) {
+                f2.material.color = { r: .8, g: .6, b: .8 }
+                this.fieldsOptions.push(f2.name)
+            } else if (this.szachownica[idZ][idX] == 1) {
+                this.extraMove(idZ + 1, idX + 1)
+            }
+        } catch (err) {
+            console.log(err);
+        }
     }
 
 
