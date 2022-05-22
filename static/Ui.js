@@ -66,18 +66,20 @@ class Ui {
             .then(
                 data => {
                     console.log(data, "data")
-                    if (sessionStorage.getItem('side') == 'black') {
-                        data.currTab.reverse()
-                        data.currTab.forEach(element => {
-                            document.getElementById("tab").innerHTML += element.reverse() + "</br>"
-                        });
-                    } else {
+                    game.pawnsArray = data.currTab
+                    // if (sessionStorage.getItem('side') == 'black') {
+                    //     let tempTab = data.currTab
+                    //     tempTab.reverse()
+                    //     tempTab.forEach(element => {
+                    //         document.getElementById("tab").innerHTML += element.reverse() + "</br>"
+                    //     });
+                    // } else {
                         data.currTab.forEach(element => {
                             document.getElementById("tab").innerHTML += element + "</br>"
                         });
-                    }
+                    // }
 
-                    game.szachownica = data.currTab
+                    
 
                 }
             )
@@ -101,7 +103,6 @@ class Ui {
                 .then(response => response.json())
                 .then(
                     data => {
-                        console.log(data, "data")
                         if (data.moveDone == true) {
                             clearInterval(interv);
                             ui.getTabInfo()

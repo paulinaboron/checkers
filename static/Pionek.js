@@ -35,7 +35,7 @@ class Pionek extends THREE.Mesh {
     }
 
     move(pos, name) {
-        console.log(game.deletingPawns);
+        console.log(game.deletingPawns, "+++++++");
 
         new TWEEN.Tween(this.position) // co
             .to({ x: pos.x, z: pos.z }, 500) // do jakiej pozycji, w jakim czasie

@@ -31,11 +31,22 @@ class Game {
             [0, 1, 0, 1, 0, 1, 0, 1]
         ];
 
+        this.pawnsArray = [
+            [0, 2, 0, 2, 0, 2, 0, 2],
+            [2, 0, 2, 0, 2, 0, 2, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 0, 1, 0, 1, 0, 1, 0]
+        ];
+
         this.clickedPawn = null
         this.clickedField = null
         this.fieldsOptions = []
 
-        this.deletingPawns = new Object()
+        this.deletingPawns = new Map()
 
         let i = -70
         this.szachownica.forEach(row => {
@@ -65,16 +76,7 @@ class Game {
     }
 
     setPawns() {
-        let pawns = [
-            [0, 2, 0, 2, 0, 2, 0, 2],
-            [2, 0, 2, 0, 2, 0, 2, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 1, 0, 1, 0, 1, 0, 1],
-            [1, 0, 1, 0, 1, 0, 1, 0]
-        ];
+        let pawns = this.pawnsArray
 
         let i = -70
         pawns.forEach(row => {
@@ -113,8 +115,6 @@ class Game {
         window.addEventListener("mousedown", (e) => {
 
             if (this.sceneClickIsActive) {
-
-                console.log(e);
 
                 const raycaster = new THREE.Raycaster();
                 const mouseVector = new THREE.Vector2();
@@ -170,6 +170,9 @@ class Game {
 
     checkPositions(pawn) {
 
+        console.log(this.pawnsArray);
+
+
         if (this.clickedPawn != null) {
             this.clickedPawn.deselected()
 
@@ -208,11 +211,11 @@ class Game {
 
             let idX = (f1.position.x + 70) / 20
             let idZ = (f1.position.z + 70) / 20
-            if (this.szachownica[idZ][idX] == 0) {
+            if (this.pawnsArray[idZ][idX] == 0) {
                 f1.material.color = { r: .8, g: .6, b: .8 }
                 this.fieldsOptions.push(f1.name)
             }
-            else if (this.szachownica[idZ][idX] == 2) {
+            else if (this.pawnsArray[idZ][idX] == 2) {
                 this.extraMove(idZ - 1, idX - 1, this.clickedPawn.position.z - 20, this.clickedPawn.position.x - 20)
             }
 
@@ -226,11 +229,11 @@ class Game {
             let f2 = this.scene.getObjectByName(fName2, true);
             let idX = (f2.position.x + 70) / 20
             let idZ = (f2.position.z + 70) / 20
-            if (this.szachownica[idZ][idX] == 0) {
+            if (this.pawnsArray[idZ][idX] == 0) {
                 f2.material.color = { r: .8, g: .6, b: .8 }
                 this.fieldsOptions.push(f2.name)
             }
-            else if (this.szachownica[idZ][idX] == 2) {
+            else if (this.pawnsArray[idZ][idX] == 2) {
                 this.extraMove(idZ - 1, idX + 1, this.clickedPawn.position.z - 20, this.clickedPawn.position.x + 20)
             }
         } catch (err) {
@@ -240,15 +243,15 @@ class Game {
 
     extraMove(idZ, idX, pawnZ, pawnX) {
         try {
-            if (this.szachownica[idZ][idX] == 0) {
+            if (this.pawnsArray[idZ][idX] == 0) {
                 let posX = idX * 20 - 70
                 let posZ = idZ * 20 - 70
                 let fName = 'f' + posZ + "_" + posX
                 let f = this.scene.getObjectByName(fName, true);
                 f.material.color = { r: .8, g: .6, b: .8 }
                 this.fieldsOptions.push(f.name)
-
-                this.deletingPawns[f.name] = this.findPawn(pawnZ, pawnX)
+                let p = this.findPawn(pawnZ, pawnX)
+                this.deletingPawns.set(f.name, p)
             }
         } catch (err) {
             console.log(err);
@@ -279,10 +282,10 @@ class Game {
 
             let idX = (f1.position.x + 70) / 20
             let idZ = (f1.position.z + 70) / 20
-            if (this.szachownica[idZ][idX] == 0) {
+            if (this.pawnsArray[idZ][idX] == 0) {
                 f1.material.color = { r: .8, g: .6, b: .8 }
                 this.fieldsOptions.push(f1.name)
-            } else if (this.szachownica[idZ][idX] == 1) {
+            } else if (this.pawnsArray[idZ][idX] == 1) {
                 this.extraMove(idZ + 1, idX - 1, this.clickedPawn.position.z + 20, this.clickedPawn.position.x - 20)
             }
         } catch (err) {
@@ -295,10 +298,10 @@ class Game {
             let f2 = this.scene.getObjectByName(fName2, true);
             let idX = (f2.position.x + 70) / 20
             let idZ = (f2.position.z + 70) / 20
-            if (this.szachownica[idZ][idX] == 0) {
+            if (this.pawnsArray[idZ][idX] == 0) {
                 f2.material.color = { r: .8, g: .6, b: .8 }
                 this.fieldsOptions.push(f2.name)
-            } else if (this.szachownica[idZ][idX] == 1) {
+            } else if (this.pawnsArray[idZ][idX] == 1) {
                 this.extraMove(idZ + 1, idX + 1, this.clickedPawn.position.z + 20, this.clickedPawn.position.x + 20)
             }
         } catch (err) {
