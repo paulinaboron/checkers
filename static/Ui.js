@@ -74,12 +74,12 @@ class Ui {
                     //         document.getElementById("tab").innerHTML += element.reverse() + "</br>"
                     //     });
                     // } else {
-                        data.currTab.forEach(element => {
-                            document.getElementById("tab").innerHTML += element + "</br>"
-                        });
+                    data.currTab.forEach(element => {
+                        document.getElementById("tab").innerHTML += element + "</br>"
+                    });
                     // }
 
-                    
+
 
                 }
             )
@@ -113,6 +113,30 @@ class Ui {
 
                             let pawnToMove = game.scene.getObjectByName(data.pawn, true);
                             console.log(pawnToMove);
+
+                            if(data.pawnNameToDelete != null) {
+                                let pawnToDelete = game.scene.getObjectByName(data.pawnNameToDelete, true);
+                                game.scene.remove(pawnToDelete)
+
+                                let idX = (pawnToDelete.position.x + 70) / 20
+                                let idZ = (pawnToDelete.position.z + 70) / 20
+                                game.pawnsArray[idZ][idX] = 0
+                                console.log(idX, idZ);
+
+                                const body1 = JSON.stringify({ "x": idX, "z": idZ })
+                                console.log(body1);
+                                const headers1 = { "Content-Type": "application/json" }
+
+                                fetch("/REMOVE_FROM_TAB", { method: "post", body1, headers1 })
+                                    .then(response => response.json())
+                                    .then(
+                                        data => {
+                                            console.log(data, "data")
+                                            // this.getTabInfo()
+                                            ui.getTabInfo()
+                                        }
+                                    )
+                            }
 
                             new TWEEN.Tween(pawnToMove.position) // co
                                 .to({ x: data.pos.x, z: data.pos.z }, 500) // do jakiej pozycji, w jakim czasie

@@ -46,7 +46,8 @@ class Game {
         this.clickedField = null
         this.fieldsOptions = []
 
-        this.deletingPawns = new Map()
+        this.deletingPawns = new Object()
+        this.score = 0
 
         let i = -70
         this.szachownica.forEach(row => {
@@ -129,7 +130,6 @@ class Game {
                 if (intersects.length > 0) {
 
                     console.log(intersects[0].object.name);
-                    console.log(intersects[0].object.constructor.name)
 
                     if (intersects[0].object.constructor.name == "Pionek" && sessionStorage.getItem('side') == intersects[0].object.side) {
 
@@ -251,7 +251,9 @@ class Game {
                 f.material.color = { r: .8, g: .6, b: .8 }
                 this.fieldsOptions.push(f.name)
                 let p = this.findPawn(pawnZ, pawnX)
-                this.deletingPawns.set(f.name, p)
+                console.log(p, 'ppppp');
+
+                this.deletingPawns[f.name] = p
             }
         } catch (err) {
             console.log(err);
@@ -260,6 +262,8 @@ class Game {
     }
 
     findPawn(posZ, posX){
+        let foundPawn = 0
+
         var pawns = this.scene.children.filter(function (e) {
             return e.constructor.name == "Pionek";
         });
@@ -267,12 +271,12 @@ class Game {
         pawns.forEach(p => {
             if(p.position.x == posX && p.position.z == posZ){
                 console.log(p.name, "====p.name====");
-                p.material.color = { r: .1, g: .1, b: .8 }
-                return p.name
+                // p.material.color = { r: .1, g: .1, b: .8 }
+                foundPawn = p.name
             }
         });
         
-        return null
+        return foundPawn
     }
 
     basicMoveBlack() {

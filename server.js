@@ -20,6 +20,8 @@ let movedPawn = null
 let movedPawnX = 0
 let movedPawnZ = 0
 
+let pawnToDelete = null
+
 
 let currentTab = [
     [0, 2, 0, 2, 0, 2, 0, 2],
@@ -114,11 +116,11 @@ app.post("/WAITING", (req, res) => {
     });
 })
 
-app.post("/GET_TAB_INFO", (req, res)=>{
-    res.send({currTab: currentTab})
+app.post("/GET_TAB_INFO", (req, res) => {
+    res.send({ currTab: currentTab })
 })
 
-app.post("/PAWN_MOVED", (req, res) =>{
+app.post("/PAWN_MOVED", (req, res) => {
     res.send(req.body)
 
     let oldX = req.body.oldPos.x
@@ -130,10 +132,10 @@ app.post("/PAWN_MOVED", (req, res) =>{
     movedPawnX = req.body.newPos.x
     movedPawnZ = req.body.newPos.z
 
-    oldX = (oldX + 70)/20
-    oldZ = (oldZ + 70)/20
-    newX = (newX + 70)/20
-    newZ = (newZ + 70)/20
+    oldX = (oldX + 70) / 20
+    oldZ = (oldZ + 70) / 20
+    newX = (newX + 70) / 20
+    newZ = (newZ + 70) / 20
 
     console.log(oldX, oldZ, newX, newZ);
 
@@ -145,13 +147,27 @@ app.post("/PAWN_MOVED", (req, res) =>{
     movedPawn = req.body.pawn
 })
 
-app.post("/END_OF_GAME", (req, res)=>{
+app.post("/END_OF_GAME", (req, res) => {
     res.send(req.body)
 })
 
-app.post("/WAITING_FOR_MOVE", (req, res)=>{
-    res.send({moveDone: playerMadeMove, pawn: movedPawn, pos: {x: movedPawnX, z: movedPawnZ}})
+app.post("/REMOVE_FROM_TAB", (req, res) => {
+    console.log(req.body, "bb");
+    console.log(currentTab[req.body.z][req.body.x], "nr");
+    currentTab[req.body.z][req.body.x] = 0
+
+    res.send(req.body)
+})
+
+app.post("/DELETE_PAWN", (req, res) => {
+    pawnToDelete = req.body.pName
+    res.send(req.body)
+})
+
+app.post("/WAITING_FOR_MOVE", (req, res) => {
+    res.send({ moveDone: playerMadeMove, pawn: movedPawn, pos: { x: movedPawnX, z: movedPawnZ }, pawnNameToDelete: pawnToDelete })
     playerMadeMove = false
+    pawnToDelete = null
 })
 
 
