@@ -21,6 +21,7 @@ let movedPawnX = 0
 let movedPawnZ = 0
 
 let pawnToDelete = null
+let winner = null
 
 
 let currentTab = [
@@ -107,6 +108,9 @@ app.post("/REMOVE_ALL", (req, res) => {
         [1, 0, 1, 0, 1, 0, 1, 0]
     ]
 
+    winner = null
+    score = 0
+
     res.send({ "usunięto": "wszystko" })
 })
 
@@ -148,11 +152,16 @@ app.post("/PAWN_MOVED", (req, res) => {
 })
 
 app.post("/END_OF_GAME", (req, res) => {
+    winner = req.body.winner
     res.send(req.body)
 })
 
+app.post("/GET_WINNER", (req, res) => {
+    let msg = JSON.stringify({"winner": winner})
+    res.send(msg)
+})
+
 app.post("/REMOVE_FROM_TAB", (req, res) => {
-    console.log(req.body, "bb");
     console.log(currentTab[req.body.z][req.body.x], "nr");
     currentTab[req.body.z][req.body.x] = 0
 
