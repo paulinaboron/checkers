@@ -181,6 +181,6 @@ app.post("/WAITING_FOR_MOVE", (req, res) => {
 
 
 
-app.listen(PORT, function () {
+app.listen(PORT || 3000, function () {
     console.log("start serwera na porcie " + PORT)
 })
