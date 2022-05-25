@@ -77,7 +77,7 @@ class Pionek extends THREE.Mesh {
     let pawnToDelete = game.scene.getObjectByName(pawnName, true);
     game.score += 1;
 
-    if(game.score == 1){
+    if(game.score == 8){
         net.endOfGame(sessionStorage.getItem('side'))
     }
 

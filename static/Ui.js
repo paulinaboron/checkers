@@ -64,17 +64,25 @@ class Ui {
       .then((data) => {
         console.log(data, "data");
         game.pawnsArray = data.currTab;
+
         // if (sessionStorage.getItem('side') == 'black') {
-        //     let tempTab = data.currTab
-        //     tempTab.reverse()
-        //     tempTab.forEach(element => {
-        //         document.getElementById("tab").innerHTML += element.reverse() + "</br>"
-        //     });
+        //   document.getElementById("tab").innerHTML = "";
+        //   let tab = data.currTab
+        //   tab.reverse().forEach((row) => {
+        //     row.reverse().forEach((e) => {
+        //       document.getElementById("tab").innerHTML += e + " ";
+        //     })
+        //     document.getElementById("tab").innerHTML += "</br>";
+        //   });
         // } else {
-        document.getElementById("tab").innerHTML = "";
-        data.currTab.forEach((element) => {
-          document.getElementById("tab").innerHTML += element + "</br>";
-        });
+          document.getElementById("tab").innerHTML = "";
+          let tab = data.currTab
+          tab.forEach((row) => {
+            row.forEach((e) => {
+              document.getElementById("tab").innerHTML += e + " ";
+            })
+            document.getElementById("tab").innerHTML += "</br>";
+          });
         // }
       });
   }
@@ -139,18 +147,12 @@ class Ui {
       .then((response) => response.json())
       .then((data) => {
         console.log(data, "data");
-        // this.getTabInfo()
         ui.getTabInfo();
       });
 
     game.scene.remove(pawnToDelete);
   }
 
-  // stopTimer() {
-  //     clearInterval(this.interv);
-  //     document.getElementById("clock").classList.add("hidden")
-  //     game.sceneClickIsActive = true
-  // }
 
   getWinner() {
     let interv = setInterval(function () {
@@ -161,10 +163,10 @@ class Ui {
             clearInterval(interv);
             document.getElementById("clock").classList.add("hidden");
             game.sceneClickIsActive = false;
-            if(data.winner == sessionStorage.getItem('side')){
-                ui.setStatus("Wygrałeś!!!")
-            }else{
-                ui.setStatus("Przegrałeś :(")
+            if (data.winner == sessionStorage.getItem('side')) {
+              ui.setStatus("Wygrałeś!!!")
+            } else {
+              ui.setStatus("Przegrałeś :(")
             }
           }
         });
