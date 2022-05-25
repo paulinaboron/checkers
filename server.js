@@ -1,6 +1,6 @@
 var express = require("express")
 var app = express()
-const PORT = 3000;
+const PORT = process.env.PORT
 var path = require("path")
 
 app.use(express.static('static'))
