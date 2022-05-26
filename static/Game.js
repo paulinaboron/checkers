@@ -68,8 +68,6 @@ class Game {
 
 
         this.render() // wywołanie metody render
-        let axes = new THREE.AxesHelper(100)
-        this.scene.add(axes)
 
         this.sceneClickIsActive = true
         this.pawnName = null
