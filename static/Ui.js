@@ -66,14 +66,20 @@ class Ui {
         //     document.getElementById("tab").innerHTML += "</br>";
         //   });
         // } else {
-          document.getElementById("tab").innerHTML = "";
-          let tab = data.currTab
-          tab.forEach((row) => {
-            row.forEach((e) => {
-              document.getElementById("tab").innerHTML += e + " ";
-            })
-            document.getElementById("tab").innerHTML += "</br>";
-          });
+        document.getElementById("tab").innerHTML = "";
+        let tab = data.currTab
+        tab.forEach((row) => {
+          let line = document.createElement("p");
+          row.forEach((e) => {
+            if (e == 0)
+              line.innerHTML += "<p>" + e + "</p>";
+            else if (e == 1)
+              line.innerHTML += "<p class='pinkNr'>" + e + "</p>";
+            else if (e == 2)
+              line.innerHTML += "<p class='blueNr'>" + e + "</p>";
+          })
+          document.getElementById("tab").appendChild(line)
+        });
         // }
       });
   }

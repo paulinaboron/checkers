@@ -18,7 +18,7 @@ class Net {
                 data => {
                     if (data.nrOfPlayers == 1) {
                         ui.onePlayer()
-                        let info = "Hej " + data.username + ", grasz białymi"
+                        let info = "Hi " + data.username + ", you're playing with white pawns"
                         sessionStorage.setItem('side', 'white');
                         ui.setStatus(info)
 
@@ -33,7 +33,7 @@ class Net {
                                     data => {
                                         if (data.nrOfPlayers == 2) {
                                             clearInterval(interval)
-                                            ui.setStatus("Dołączył drugi gracz: ")
+                                            ui.setStatus("2nd player joined")
                                             ui.stopWaiting()
                                             game.enableSceneClick()
                                         }
@@ -44,15 +44,15 @@ class Net {
 
                     } else if (data.nrOfPlayers == 2) {
                         ui.twoPlayers()
-                        let info = "Hej " + data.username + ", grasz czarnymi"
+                        let info = "Hi " + data.username + ", you're playing with black pawns"
                         sessionStorage.setItem('side', 'black');
                         ui.setStatus(info)
                     }
                     else if(data.nrOfPlayers == 999){
-                        ui.setStatus("Wprowadź inny login")
+                        ui.setStatus("Input different username")
                     }
                     else {
-                        ui.setStatus("Gra juz trwa")
+                        ui.setStatus("Game already started")
                     }
                 }
             )

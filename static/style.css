@@ -75,7 +75,33 @@ button {
     padding: 20px;
     bottom: 30px;
     left: 20px;
-    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-content: space-around;
+    align-items: center;
+    gap: 2px;
+    width: 200px;
+    font-size: 14pt;
+}
+
+#tab p{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 7px;
+}
+
+.pinkNr{
+    font-weight: 800;
+    color: rgb(245, 198, 241);
+}
+
+.blueNr{
+    font-weight: 800;
+    color: rgb(197, 224, 241);
 }
 
 #clock {
@@ -90,6 +116,6 @@ button {
 
 #timer {
     margin-top: 4vh;
-    font-size: 200pt;
+    font-size: 120pt;
     color: rgb(255, 255, 255);
 }

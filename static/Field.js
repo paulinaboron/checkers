@@ -1,7 +1,7 @@
 class Field extends THREE.Mesh {
 
     constructor(color, x, y, z, name) {
-        super() // wywołanie konstruktora klasy z której dziedziczymy czyli z Mesha
+        super()
         this.name = name
         this.geometry = new THREE.BoxGeometry(20, 5, 20);
 
