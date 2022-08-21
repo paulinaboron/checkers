@@ -14,27 +14,32 @@
     <script src="libs/tween.umd.js"></script>
     <script src="./three.js"></script>
     <link rel="stylesheet" href="./style.css">
+    <link rel="icon" href="./imgs/pink.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Quicksand&display=swap"
+        rel="stylesheet">
 </head>
 
 <body>
 
     <div id="status">Status</div>
-    <div id="menu">
+    <div id="menu" class="glass">
         <input type="text" id="username">
         <button id="login">Login</button>
         <button id="reset">Reset</button>
     </div>
 
-    <div id="wait" class="hidden">
-        <h2>Czekaj na drugiego gracza</h2>
+    <div id="wait" class="hidden glass">
+        <h2>Waiting for 2nd player...</h2>
     </div>
 
     <div id="clock" class="hidden">
-        <h1>Czekaj na swój ruch</h1>
+        <h1>Waiting...</h1>
         <div id="timer">30</div>
     </div>
 
-    <div id="tab">INFO</div>
+    <div id="tab" class="glass">INFO</div>
 
     <div id="root"></div>
 </body>

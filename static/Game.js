@@ -127,8 +127,6 @@ class Game {
 
                 if (intersects.length > 0) {
 
-                    console.log(intersects[0].object.name);
-
                     if (intersects[0].object.constructor.name == "Pionek" && sessionStorage.getItem('side') == intersects[0].object.side) {
 
                         this.checkPositions(intersects[0])
@@ -144,9 +142,7 @@ class Game {
                         this.clickedField.selected()
 
                         if (this.clickedPawn != null) {
-                            console.log(this.clickedField.position);
                             this.clickedPawn.move(this.clickedField.position, this.pawnName)
-
                             this.clickedPawn.deselected()
                             this.clickedField.deselected()
 
@@ -160,7 +156,7 @@ class Game {
 
 
                 }
-            } else console.log("scene click not active");
+            }
         });
 
     }
@@ -168,12 +164,8 @@ class Game {
 
     checkPositions(pawn) {
 
-        console.log(this.pawnsArray);
-
-
         if (this.clickedPawn != null) {
             this.clickedPawn.deselected()
-
         }
 
         this.clickedPawn = pawn.object
@@ -181,25 +173,11 @@ class Game {
         this.pawnName = pawn.object.name
         this.fieldsOptions = []
 
-        var fields = this.scene.children.filter(function (e) {
-            return e.constructor.name == "Field";
-        });
-
-        var opposidePawns = this.scene.children.filter(function (e) {
-            return e.constructor.name == "Pionek" && e.side != sessionStorage.getItem('side');
-        });
-        console.log(opposidePawns)
-
         if (sessionStorage.getItem('side') == 'white') {
-
             this.basicMoveWhite()
-
         } if (sessionStorage.getItem('side') == 'black') {
-
             this.basicMoveBlack()
-
         }
-
     }
 
     basicMoveWhite() {
@@ -249,7 +227,6 @@ class Game {
                 f.material.color = { r: .8, g: .6, b: .8 }
                 this.fieldsOptions.push(f.name)
                 let p = this.findPawn(pawnZ, pawnX)
-                console.log(p, 'ppppp');
 
                 this.deletingPawns[f.name] = p
             }
@@ -268,8 +245,6 @@ class Game {
 
         pawns.forEach(p => {
             if(p.position.x == posX && p.position.z == posZ){
-                console.log(p.name, "====p.name====");
-                // p.material.color = { r: .1, g: .1, b: .8 }
                 foundPawn = p.name
             }
         });

@@ -11,8 +11,6 @@ class Ui {
 
   loginClick() {
     let username = document.getElementById("username").value;
-    console.log(username);
-
     net.addPlayer(username);
   }
 
@@ -21,7 +19,6 @@ class Ui {
   }
 
   onePlayer() {
-    console.log("1 player");
     game.setPawns();
     document.getElementById("menu").classList.add("hidden");
     document.getElementById("wait").classList.remove("hidden");
@@ -31,7 +28,6 @@ class Ui {
   }
 
   twoPlayers() {
-    console.log("2 players");
     game.setPawns();
     document.getElementById("menu").classList.add("hidden");
     this.startTimer();
@@ -43,10 +39,6 @@ class Ui {
 
   stopWaiting() {
     document.getElementById("wait").classList.add("hidden");
-  }
-
-  moreThanTwoPlayers() {
-    console.log("3 & more");
   }
 
   setStatus(info) {
@@ -62,7 +54,6 @@ class Ui {
     fetch("/GET_TAB_INFO", { method: "post", body, headers })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data, "data");
         game.pawnsArray = data.currTab;
 
         // if (sessionStorage.getItem('side') == 'black') {
@@ -109,10 +100,7 @@ class Ui {
             document.getElementById("clock").classList.add("hidden");
             game.sceneClickIsActive = true;
 
-            console.log(data.pawn);
-
             let pawnToMove = game.scene.getObjectByName(data.pawn, true);
-            console.log(pawnToMove);
 
             if (data.pawnNameToDelete != null) {
               ui.deletePawn(data.pawnNameToDelete);
@@ -122,9 +110,6 @@ class Ui {
               .to({ x: data.pos.x, z: data.pos.z }, 500) // do jakiej pozycji, w jakim czasie
               .repeat(0) // liczba powtórzeń
               .easing(TWEEN.Easing.Cubic.InOut) // typ easingu (zmiana w czasie)
-              .onComplete(() => {
-                console.log("koniec animacji");
-              }) // funkcja po zakończeniu animacji
               .start();
           }
         });
@@ -137,16 +122,13 @@ class Ui {
     let idX = (pawnToDelete.position.x + 70) / 20;
     let idZ = (pawnToDelete.position.z + 70) / 20;
     game.pawnsArray[idZ][idX] = 0;
-    console.log(idX, idZ);
 
     const body = JSON.stringify({ x: idX, z: idZ });
-    console.log(body);
     const headers = { "Content-Type": "application/json" };
 
     fetch("/REMOVE_FROM_TAB", { method: "post", body, headers })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data, "data");
         ui.getTabInfo();
       });
 

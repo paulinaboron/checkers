@@ -9,14 +9,13 @@ class Net {
 
     addPlayer(username) {
 
-        const body = JSON.stringify({ "username": username }) // body czyli przesyłane na serwer dane
-        const headers = { "Content-Type": "application/json" } // nagłowek czyli typ danych
+        const body = JSON.stringify({ "username": username })
+        const headers = { "Content-Type": "application/json" }
 
-        fetch("/ADD_USER", { method: "post", body, headers }) // fetch
+        fetch("/ADD_USER", { method: "post", body, headers })
             .then(response => response.json())
             .then(
                 data => {
-                    console.log(data, "data")
                     if (data.nrOfPlayers == 1) {
                         ui.onePlayer()
                         let info = "Hej " + data.username + ", grasz białymi"
@@ -32,7 +31,6 @@ class Net {
                                 .then(response => response.json())
                                 .then(
                                     data => {
-                                        console.log(data, "data")
                                         if (data.nrOfPlayers == 2) {
                                             clearInterval(interval)
                                             ui.setStatus("Dołączył drugi gracz: ")
@@ -54,10 +52,9 @@ class Net {
                         ui.setStatus("Wprowadź inny login")
                     }
                     else {
-                        console.log("more");
                         ui.setStatus("Gra juz trwa")
                     }
-                } // dane odpowiedzi z serwera
+                }
             )
 
     }
@@ -68,11 +65,6 @@ class Net {
 
         fetch("/REMOVE_ALL", { method: "post", body, headers })
             .then(response => response.json())
-            .then(
-                data => {
-                    console.log(data, "data")
-                }
-            )
     }
 
     endOfGame(res){
@@ -81,11 +73,6 @@ class Net {
 
         fetch("/END_OF_GAME", { method: "post", body, headers })
             .then(response => response.json())
-            .then(
-                data => {
-                    console.log(data, "data")
-                }
-            )
     }
 }
 

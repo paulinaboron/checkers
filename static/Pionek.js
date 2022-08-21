@@ -26,7 +26,6 @@ class Pionek extends THREE.Mesh {
     });
 
     this.material.color = { r: 0.8, g: 0.6, b: 0.8 };
-    console.log(this.name);
   }
 
   deselected() {
@@ -34,19 +33,17 @@ class Pionek extends THREE.Mesh {
   }
 
   move(pos, name) {
-    console.log(game.deletingPawns, "+++++++");
     let fName = "f" + pos.z + "_" + pos.x;
     if (game.deletingPawns[fName] != undefined) {
       this.deletePawn(fName);
     }
 
-    new TWEEN.Tween(this.position) // co
-      .to({ x: pos.x, z: pos.z }, 500) // do jakiej pozycji, w jakim czasie
-      .repeat(0) // liczba powtórzeń
-      .easing(TWEEN.Easing.Cubic.InOut) // typ easingu (zmiana w czasie)
+    new TWEEN.Tween(this.position)
+      .to({ x: pos.x, z: pos.z }, 500)
+      .repeat(0)
+      .easing(TWEEN.Easing.Cubic.InOut)
       .onComplete(() => {
-        console.log("koniec animacji");
-      }) // funkcja po zakończeniu animacji
+      })
       .start();
 
     const body = JSON.stringify({
@@ -59,7 +56,6 @@ class Pionek extends THREE.Mesh {
     fetch("/PAWN_MOVED", { method: "post", body, headers })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data, "data");
         ui.startTimer();
       });
 
@@ -84,27 +80,17 @@ class Pionek extends THREE.Mesh {
     let idX = (pawnToDelete.position.x + 70) / 20;
     let idZ = (pawnToDelete.position.z + 70) / 20;
     game.pawnsArray[idZ][idX] = 0;
-    console.log(idX, idZ);
 
     let body = JSON.stringify({ x: idX, z: idZ });
-    console.log(body);
     const headers = { "Content-Type": "application/json" };
 
     fetch("/REMOVE_FROM_TAB", { method: "post", body, headers })
       .then((response) => response.json())
-      .then((data) => {
-        console.log(data, "data");
-        // ui.get
-        
-      });
 
     body = JSON.stringify({ pName: pawnName });
 
     fetch("/DELETE_PAWN", { method: "post", body, headers })
       .then((response) => response.json())
-      .then((data) => {
-        console.log(data, "data");
-      });
 
     game.scene.remove(pawnToDelete);
     ui.getTabInfo()

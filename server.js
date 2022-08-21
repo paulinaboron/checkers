@@ -36,7 +36,6 @@ app.get("/", function (req, res) {
 })
 
 app.post("/ADD_USER", (req, res) => {
-    console.log(req.body, "body");
 
     if(players.length == 0){
         players[0] = req.body.username
@@ -99,8 +98,6 @@ app.post("/PAWN_MOVED", (req, res) => {
     newX = (newX + 70) / 20
     newZ = (newZ + 70) / 20
 
-    console.log(oldX, oldZ, newX, newZ);
-
     let temp = currentTab[oldZ][oldX]
     currentTab[oldZ][oldX] = 0
     currentTab[newZ][newX] = temp
@@ -120,9 +117,7 @@ app.post("/GET_WINNER", (req, res) => {
 })
 
 app.post("/REMOVE_FROM_TAB", (req, res) => {
-    console.log(currentTab[req.body.z][req.body.x], "nr");
     currentTab[req.body.z][req.body.x] = 0
-
     res.send(req.body)
 })
 
